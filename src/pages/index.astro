@@ -17,7 +17,7 @@ if (Astro.request.method === "POST") {
     form_message.message = error.message;  
   }
   else {
-    const { data, error } = await resend.contacts.create({
+    const { error } = await resend.contacts.create({
       audienceId: import.meta.env.RESEND_AUDIENCE_ID as string,
       email
     });
