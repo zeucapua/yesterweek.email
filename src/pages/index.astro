@@ -1,16 +1,72 @@
 ---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { resend } from "../utils/resend";
 
+const form_message : { type: "success" | "error", message: string } = { type: "success", message: "" };
+if (Astro.request.method === "POST") {
+  const form_data = await Astro.request.formData();
+  const email = form_data.get("new_reader") as string;
+  const { error } = await resend.emails.send({
+    from: "Yesterweek Postmaster <postmaster@yesterweek.email>",
+    to: [email],
+    subject: "Thanks for being a Newsie",
+    html: "<strong>It means a lot that you've decided to let Yesterweek grace your inbox.</strong>"
+  });
+  if (error) { 
+    form_message.type = "error";
+    form_message.message = error.message;  
+  }
+  else {
+    const { data, error } = await resend.contacts.create({
+      audienceId: import.meta.env.RESEND_AUDIENCE_ID as string,
+      email
+    });
+    if (error) { 
+      form_message.type = "error";
+      form_message.message = error.message;     
+    }
+    else {
+      form_message.type = "success";
+      form_message.message = "You've subscribed!";     
+    }
+  }
+}
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<SiteLayout title="Yesterday.Email">
+  <main class="flex flex-col gap-16 w-full h-full px-8 py-12 lg:px-12 lg:py-16 font-satoshi">
+    <div class="flex flex-col gap-8">
+      <h1 class="text-4xl lg:text-8xl font-mazius">A newsletter about the past and future of tech</h1>
+      <h2 class="text-lg lg:text-3xl self-end">(just kidding, it's not that serious)</h2>
+    </div>
+
+    <section class="flex flex-col gap-8 text-center items-center px-4 py-8 lg:px-12 kg:py-8 bg-white w-fit self-center rounded-md shadow-lg">
+      <div class="flex flex-col gap-2 items-center">
+        <h3 class="text-2xl lg:text-5xl font-mazius">Subscribe to Yesterweek</h3>
+        <p class="text-base lg:text-xl font-satoshi font-medium">
+          Get a new issue every other week, right in your inbox!
+        </p>
+      </div>
+
+      <form method="POST" class="flex flex-col gap-4 w-full">
+        <input 
+          name="new_reader" 
+          type="email" 
+          placeholder="Email"
+          class="w-full px-4 py-2 border rounded-xl" 
+          required
+        />
+        <button type="submit" class="w-full bg-violet-500 hover:bg-violet-600 px-8 py-4 rounded-xl text-white font-bold shadow-lg">
+          Be a part of the Newsies
+        </button>
+      </form>
+      {
+        form_message.message.length > 0 &&
+        <p class={`text-${form_message.type === "success" ? "green" : "red"}-500`}>
+          { form_message.message }
+        </p>
+      }
+    </section>
+
+  </main>
+</SiteLayout>

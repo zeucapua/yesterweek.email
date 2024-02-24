@@ -1,0 +1,31 @@
+---
+import Navbar from "../components/Navbar.astro";
+const { title } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{ title }</title>
+	</head>
+	<body class="relative w-full h-full min-w-screen min-h-screen">
+    <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"><div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#d5c5ff,transparent)]"></div></div>
+    <Navbar />
+    <slot />
+	</body>
+</html>
+
+<style is:global>
+  @font-face {
+    font-family: Mazius;
+    src: url("/MaziusDisplay-Bold.woff2");
+  }
+
+  @font-face {
+    font-family: Satoshi;
+    src: url("/Satoshi-Variable.woff2");
+  }
+</style>
