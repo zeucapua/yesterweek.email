@@ -1,0 +1,50 @@
+---
+import { eq, db, Issue, Editorial, Feature, Listicle } from "astro:db";
+import AdminLayout from "../../layouts/AdminLayout.astro"
+
+const issues = await db.select()
+  .from(Issue);
+
+if (Astro.request.method === "PATCH") {
+
+}
+---
+
+<AdminLayout title="Postmaster Dashboard | Yesterweek.Email">
+  <main class="flex flex-col gap-8">
+    <h1 class="text-4xl font-mazius font-bold">Dashboard</h1>
+    { issues.length === 0 && (
+      <h2>No issues yet.</h2>
+    )}
+    { issues.map((issue) => (
+      <form method="PATCH" class="flex flex-col gap-4">
+        <section class="flex flex-col gap-4">
+          <a href={`/issue/${issue.id}`}>{issue.id}</a>
+          <input 
+            name={`lead_${issue.id}`} 
+            type="text" 
+            value={issue.lead} 
+            placeholder="Issue Lead"
+            class="bg-transparent border px-4 py-2"
+          />
+          <button type="submit">Save</button> 
+        </section>
+
+        <section class="flex flex-col gap-4">
+          <p>Editorial</p>
+          <input 
+            name={`subject_${issue.id}`} 
+            type="text" 
+            placeholder="Subject"
+            class="bg-transparent border px-4 py-2"
+          />
+          <textarea
+            name={`editorial_content_${issue.id}`} 
+            placeholder="Editorial Content"
+            class="bg-transparent border px-4 py-2"
+          />
+        </section>
+      </form>
+    ))}
+  </main>
+</AdminLayout>

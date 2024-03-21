@@ -1,0 +1,36 @@
+---
+const { title } = Astro.props;
+---
+
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{ title }</title>
+	</head>
+  <body class="font-satoshi flex flex-col p-8 gap-8 w-full h-full min-w-screen min-h-screen bg-neutral-950 text-white">
+    <nav class="flex gap-4">
+      <a href="/">Back to Home</a>
+      -
+      <a href="/admin">Dashboard</a>
+      -
+      <a href="/admin/new">Create Issue</a>
+    </nav>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  @font-face {
+    font-family: Mazius;
+    src: url("/MaziusDisplay-Bold.woff2");
+  }
+
+  @font-face {
+    font-family: Satoshi;
+    src: url("/Satoshi-Variable.woff2");
+  }
+</style>

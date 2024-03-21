@@ -1,0 +1,135 @@
+---
+import { db, Editorial } from "astro:db";
+import AdminLayout from "../../layouts/AdminLayout.astro"
+import { Feature } from "astro:db";
+import { Issue } from "astro:db";
+import { Listicle } from "astro:db";
+
+if (Astro.request.method === "POST") {
+  const form_data = await Astro.request.formData();
+  const data = {} as Record<string, any>;
+  for (let [key, value] of form_data.entries()) {
+    data[key] = value;
+  }
+  
+  // editorial, feature -> issue -> listicle 
+  const [editorial] = await db.insert(Editorial).values({
+    subject: data.subject,
+    content: data.editorial_content,
+  }).returning();
+
+  const [feature] = await db.insert(Feature).values({
+    headline: data.headline,
+    content: data.feature_content
+  }).returning();
+
+  const [issue] = await db.insert(Issue).values({
+    lead: data.lead,
+    editorialId: editorial.id,
+    featureId: feature.id,
+  }).returning();
+
+  const queries = [];
+  for (let i = 1; i < 6; i++) {
+    console.log({i}, data[`listicle_${i}`]);
+    queries.push(
+      db.insert(Listicle).values({ 
+        content: data[`listicle_${i}`],
+        issueId: issue.id
+      })
+    );
+  }
+
+  await db.batch(queries);
+}
+---
+
+<AdminLayout title="Create Issue - Yesterweek.Email">
+  <form method="POST" class="flex flex-col gap-8">
+    <section class="flex gap-4 justify-between">
+      <input 
+        name="lead" 
+        type="text" 
+        placeholder="Lead" 
+        class="bg-transparent border px-4 py-2" 
+        required
+      />
+      <button type="submit" class="px-4 py-2 border bg-white text-black">Save</button> 
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <p>Editorial</p>
+      <input 
+        name="subject" 
+        type="text" 
+        placeholder="Subject"
+        class="bg-transparent border px-4 py-2" 
+        required
+      />
+      <textarea
+        name="editorial_content" 
+        placeholder="Editorial Content"
+        class="bg-transparent border px-4 py-2" 
+        required
+      />
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <p>Feature</p>
+      <input 
+        name="headline" 
+        type="text" 
+        placeholder="Headline"
+        class="bg-transparent border px-4 py-2" 
+        required
+      />
+      <textarea
+        name="feature_content" 
+        placeholder="Feature Content"
+        class="bg-transparent border px-4 py-2" 
+        required
+      />
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <p>Listicle</p>
+      <input
+        name="listicle_1"
+        type="text"
+        placeholder="Listicle 1"
+        class="bg-transparent border px-4 py-2"
+        required
+      />
+      <input
+        name="listicle_2"
+        type="text"
+        placeholder="Listicle 2"
+        class="bg-transparent border px-4 py-2"
+        required
+      />
+      <input
+        name="listicle_3"
+        type="text"
+        placeholder="Listicle 3"
+        class="bg-transparent border px-4 py-2"
+        required
+      />
+      <input
+        name="listicle_4"
+        type="text"
+        placeholder="Listicle 4"
+        class="bg-transparent border px-4 py-2"
+        required
+      />
+      <input
+        name="listicle_5"
+        type="text"
+        placeholder="Listicle 5"
+        class="bg-transparent border px-4 py-2"
+        required
+      />
+    </section>
+  </form>
+</AdminLayout>
+
+
