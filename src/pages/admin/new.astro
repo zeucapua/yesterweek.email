@@ -31,16 +31,14 @@ if (Astro.request.method === "POST") {
 
   const queries = [];
   for (let i = 1; i < 6; i++) {
-    console.log({i}, data[`listicle_${i}`]);
-    queries.push(
-      db.insert(Listicle).values({ 
+    queries.push({ 
         content: data[`listicle_${i}`],
         issueId: issue.id
-      })
+      }
     );
   }
 
-  await db.batch(queries);
+  db.insert(Listicle).values(queries);
 }
 ---
 
