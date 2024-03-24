@@ -5,6 +5,11 @@ import { Feature } from "astro:db";
 import { Issue } from "astro:db";
 import { Listicle } from "astro:db";
 
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect("/admin/login");
+}
+
 if (Astro.request.method === "POST") {
   const form_data = await Astro.request.formData();
   const data = {} as Record<string, any>;

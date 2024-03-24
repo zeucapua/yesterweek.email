@@ -2,13 +2,13 @@
 import AdminLayout from "../../layouts/AdminLayout.astro";
 ---
 
-<AdminLayout title="Login - Yesterweek.Email">
+<AdminLayout title="Signup as Postmaster - Yesterweek.Email">
   <form 
     method="POST" 
-    action="/api/login"
+    action="/api/signup"
     class="flex flex-col w-fit min-w-96 h-full p-8 gap-4"
   >
-    <p>Login</p>
+    <p>Signup</p>
     <input 
       type="text" 
       id="username" 
@@ -22,6 +22,14 @@ import AdminLayout from "../../layouts/AdminLayout.astro";
       id="password" 
       name="password" 
       placeholder="Password"
+      class="border border-white px-4 py-2 text-white bg-transparent"
+      required
+    />
+    <input 
+      type="password" 
+      id="secret"
+      name="secret" 
+      placeholder="What is the secret password?"
       class="border border-white px-4 py-2 text-white bg-transparent"
       required
     />

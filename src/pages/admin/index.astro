@@ -2,6 +2,11 @@
 import { eq, db, Issue, Editorial, Feature } from "astro:db";
 import AdminLayout from "../../layouts/AdminLayout.astro"
 
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect("/admin/login");
+}
+
 const issues = await db.select()
   .from(Issue)
   .innerJoin(Editorial, eq(Issue.editorialId, Editorial.id))

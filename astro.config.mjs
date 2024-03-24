@@ -9,5 +9,10 @@ import db from "@astrojs/db";
 export default defineConfig({
   output: "server",
   integrations: [tailwind(), react(), db()],
-  adapter: vercel()
+  adapter: vercel(),
+  vite: {
+    optimizeDeps: {
+      exclude: ["astro:db"]
+    }
+  }
 });

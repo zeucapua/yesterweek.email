@@ -13,7 +13,11 @@ const { title } = Astro.props;
 	</head>
   <body class="font-satoshi flex flex-col p-8 gap-8 w-full h-full min-w-screen min-h-screen bg-neutral-950 text-white">
     <nav class="flex gap-4">
-      <a href="/">Back to Home</a>
+      <a href="/">Back to Frontpage</a>
+      -
+      <form method="POST" action="/api/logout">
+        <button>Logout</button>
+      </form>
       -
       <a href="/admin">Dashboard</a>
       -
